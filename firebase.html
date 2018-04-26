@@ -1,0 +1,280 @@
+<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+
+<script src="firebase.js"></script>
+<script src="external.js"></script>
+<script src="logics.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+<script>
+// Wait for window load
+$(window).load(function() {
+    // Animate loader off screen
+    $(".se-pre-con").fadeOut(2500);
+});
+
+
+var trans = [];
+var users = [];
+var clients = [];
+var month = 'apr';
+var userConfig;
+var user = "Ad";
+var userDataLoaded = false;
+var chosenLeftTable = user;
+
+
+function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
+    firebase.database().ref('transactions/' + month).push({
+        kto: kto1,
+        komu: komu1,
+        co: co1,
+        ile: ile1,
+        user: user1,
+        kiedy: kiedy1
+    });
+}
+
+function addNewUser(name1, pass1, nick1) {
+    firebase.database().ref('users/').push({
+        name: name1,
+        pass: pass1,
+        nick: nick1
+    });
+}
+loadUser();
+loadData();
+//console.log(trans.length);
+function updateData() {
+    calculate();
+    updateCenterTable();
+    updateLeftTable();
+    updateRightTable();
+}
+
+function updateCenterTable() {
+    var x = document.getElementById("tab");
+
+    for(i = tab.rows.length - 1 ; i >= 0 ; i--)
+    {
+        if(tab.rows[i].id == 'centerTable') {
+            tab.deleteRow(i);
+        }
+    }
+
+    for (var i = 0; i < trans.length; i++) {
+
+        let c = userConfig.tableLayout.center.client;
+        if(trans[i].komu != c){
+            continue;
+        }
+
+        var row = x.insertRow();
+        row.id = "centerTable";
+        var cell;
+
+        cell = row.insertCell();
+        var img = document.createElement('img');
+        img.src = "trash.png";
+        img.width="20";
+        img.height="20";
+        cell.appendChild(img);
+
+        cell = row.insertCell().innerHTML = trans[i].kiedy;
+        cell = row.insertCell().innerHTML = trans[i].co;
+        let noOfUsers = Object.keys(userConfig.tableLayout.center.users).length;
+        for(var j = 1; j <= noOfUsers; j++) {
+            let u = "user" + j;
+            cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
+        }
+    }
+}
+
+function updateLeftTable() {
+    var x = document.getElementById("leftTab");
+
+    for(i = x.rows.length - 1 ; i >= 1 ; i--)
+    {
+        x.deleteRow(i);
+    }
+
+    for (var i = 0; i < trans.length; i++) {
+
+        if(trans[i].kto != chosenLeftTable){
+            continue;
+        }
+
+        var row = x.insertRow();
+        row.id = "leftTable";
+        var cell;
+
+        cell = row.insertCell();
+        var img = document.createElement('img');
+        img.src = "trash.png";
+        img.width="20";
+        img.height="20";
+        cell.appendChild(img);
+        cell.setAttribute("id",trans[i].id);
+
+        cell = row.insertCell().innerHTML = trans[i].kiedy;
+        cell = row.insertCell().innerHTML = trans[i].co;
+        cell = row.insertCell().innerHTML = trans[i].ile;
+
+    }
+}
+
+function updateRightTable() {
+    var x = document.getElementById("rightTab");
+
+    for(i = tab.rows.length - 1 ; i >= 0 ; i--)
+    {
+        if(tab.rows[i].id == 'rightTable') {
+            tab.deleteRow(i);
+        }
+    }
+
+    for (var i = 0; i < trans.length; i++) {
+
+        let c = userConfig.tableLayout.right.client;
+        if(trans[i].komu != c){
+            continue;
+        }
+
+        var row = x.insertRow();
+        row.id = "rightTable";
+        var cell;
+
+        cell = row.insertCell();
+        var img = document.createElement('img');
+        img.src = "trash.png";
+        img.width="20";
+        img.height="20";
+        cell.appendChild(img);
+
+        cell = row.insertCell().innerHTML = trans[i].kiedy;
+        cell = row.insertCell().innerHTML = trans[i].co;
+        let noOfUsers = Object.keys(userConfig.tableLayout.right.users).length;
+        for(var j = 1; j <= noOfUsers; j++) {
+            let u = "user" + j;
+            cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
+        }
+    }
+}
+
+function updateSummaryTable() {
+    var x = document.getElementById("summary");
+
+    x.deleteRow(1);
+    x.deleteRow(0);
+
+    let noOfClients = Object.keys(userConfig.transUsers).length;
+
+    var headerRow = x.insertRow();
+    //headerRow.colspan = Object.keys(userConfig.transUsers).length;
+    headerCell = document.createElement('th');
+    headerCell.colSpan = noOfClients;
+    headerCell.innerHTML = "Podsumowanie";
+    headerCell.className = "text-center";
+    headerRow.appendChild(headerCell);
+
+    var row = x.insertRow();
+    for(var i = 1; i <= noOfClients; i++) {
+        var cell = document.createElement('th');
+        var u = "user" + i;
+        cell.innerHTML = userConfig.transUsers[u];
+        cell.className = "text-center";
+        row.appendChild(cell);
+    }
+
+    var row = x.insertRow();
+    for(var i = 1; i <= noOfClients; i++) {
+        var cell = row.insertCell();
+        var u = "user" + i;
+
+        for(username of users) {
+            if(username.nick == userConfig.transUsers[u]) {
+                cell.innerHTML = round2Fixed(username.give-username.get);
+                break;
+            }
+        }
+        cell.className = "text-center";
+    }
+}
+
+function sendForm() {
+    var form = document.getElementById("myForm");
+    console.log(form.kto.value + " " + form.komu.value);
+
+    let v1 = form.kto.value;
+    let v2 = form.komu.value;
+    let v3 = form.co.value;
+    let v4 = form.ile.value;
+    let v5 = form.kiedy.value;
+
+    addNewTransaction(v1, v2, v3, v4, v5, user);
+    loadData();
+    form.reset();
+}
+
+</script>
+
+
+<html>
+<head>
+    <title>DJS Raport</title>
+</head>
+
+<body>
+    <div class="se-pre-con"></div>
+
+    <form id="myForm" onsubmit="sendForm();return false">
+        Kto:
+        <select name="kto">
+        </select>
+        Komu:
+        <select name="komu">
+        </select>
+        Ile: <input type="text" name="ile">
+        Co: <input type="text" name="co">
+        Kiedy:<input type="date" name="kiedy">
+        <input type="submit" value="but">
+
+    </form>
+
+    <table id="tab" class="table-fill">
+        <th class="text-left"></th>
+        <th class="text-left">Data</th>
+        <th>Co</th>
+        <th>Ad</th>
+        <th>Kim</th>
+    </table>
+
+    <table id="userChoiceTab" class="table-fill">
+    </table>
+    <table id="leftTab" class="table-fill">
+        <th class="text-left"></th>
+        <th class="text-left">Data</th>
+        <th>Co</th>
+        <th>Ad</th>
+    </table>
+
+    <br>
+    <table id="rightTab" class="table-fill">
+        <th class="text-left"></th>
+        <th class="text-left">Data</th>
+        <th>Co</th>
+        <th>Ad</th>
+        <th>Kim</th>
+        <th>P</th>
+    </table>
+    <br>
+
+    <br><br><br>
+    <table id="summary" class="table-fill">
+        <tr><th class="text-center" colspan=3>Podumowanie</th></tr>
+        <tr><td>ff</td><td>2</td><td>3</td></tr>
+    </table>
+
+    </html>

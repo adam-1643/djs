@@ -1,0 +1,167 @@
+<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+
+<script src="firebase.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* This only works with JavaScript,
+if it's not present, don't show loader */
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(images/loader-64x/Preloader_3.gif) center no-repeat #fff;
+}
+</style>
+
+<script>
+// Wait for window load
+$(window).load(function() {
+    // Animate loader off screen
+    $(".se-pre-con").fadeOut(2500);
+});
+
+
+var trans = [];
+var users = [];
+var clients = [];
+var month = 'apr';
+var userConfig;
+var user = "Ad";
+var userDataLoaded = false;
+
+
+function addNewTransaction(kto1, komu1, co1, ile1, user1) {
+    firebase.database().ref('transactions/' + month).push({
+        kto: kto1,
+        komu: komu1,
+        co: co1,
+        ile: ile1,
+        user: user1
+    });
+}
+
+function addNewUser(name1, pass1, nick1) {
+    firebase.database().ref('users/').push({
+        name: name1,
+        pass: pass1,
+        nick: nick1
+    });
+}
+loadUser();
+loadData();
+//console.log(trans.length);
+function updateData() {
+    calculate();
+    updateCenterTable();
+
+}
+
+function updateCenterTable() {
+    var x = document.getElementById("tab");
+
+    for(i = tab.rows.length - 1 ; i >= 0 ; i--)
+    {
+        if(tab.rows[i].id == 'centerTable') {
+            tab.deleteRow(i);
+        }
+    }
+
+    for (var i = 0; i < trans.length; i++) {
+
+        var row = x.insertRow();
+        row.id = "centerTable";
+        var cell;
+
+        cell = row.insertCell();
+        var img = document.createElement('img');
+        img.src = "trash.png";
+        img.width="20";
+        img.height="20";
+        cell.appendChild(img);
+
+        cell = row.insertCell().innerHTML = trans[i].kiedy;
+        cell = row.insertCell().innerHTML = trans[i].co;
+        for(var j = 1; j <= 2; j++) {
+            let u = "user" + j;
+            cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
+        }
+    }
+}
+
+function calculate() {
+    for(user of users) {
+        user.give = 0;
+        user.get = 0;
+        for(t of trans) {
+            console.log(user.nick + " oraz " + t.kto);
+            if(user.nick === t.kto) {
+                console.log('a');
+                user.give += t.ile;
+            }
+            if(user.nick === t.komu) {
+                console.log('a');
+                user.get += t.ile;
+            }
+        }
+
+    }
+    console.log(users);
+}
+
+function test1() {
+    var form = document.getElementById("myForm");
+    console.log(form.kto.value + " " + form.komu.value);
+
+    let v1 = form.kto.value;
+    let v2 = form.komu.value;
+    let v3 = form.co.value;
+    let v4 = form.ile.value;
+
+    addNewTransaction(v1, v2, v3, v4, user);
+    loadData();
+    form.reset();
+}
+
+</script>
+
+
+<html>
+<head>
+    <title>Panel administracyjny</title>
+</head>
+
+<body>
+    <div class="se-pre-con"></div>
+
+    <form id="myForm" onsubmit="test1();return false">
+        Kto:
+        <select name="kto">
+        </select>
+        Komu:
+        <select name="komu">
+        </select>
+        Ile: <input type="text" name="ile">
+        Co: <input type="text" name="co">
+        Kiedy:<input type="date" name="kiedy">
+        <input type="submit" value="but">
+
+    </form>
+
+    <table id="tab" class="table-fill">
+        <th class="text-left"></th>
+        <th class="text-left">Data</th>
+        <th>Co</th>
+        <th>Ad</th>
+        <th>Kim</th>
+    </table>
+
+    </html>
