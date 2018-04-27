@@ -24,3 +24,11 @@ function formatDateString() {
     let dateString = year + "-" + monthString + "-" + day;
     return dateString;
 }
+
+function encodeNumber(num) {
+    return +(num.replace(",", "."));
+}
+
+function decodeNumber(num) {
+    return +(num.replace(".", ","));
+}

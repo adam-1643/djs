@@ -17,24 +17,27 @@ $(window).load(function() {
 
 
 var trans = [];
+var transKey = [];
 var users = [];
 var clients = [];
 var month = 'apr';
 var userConfig;
-var user = "Ad";
+var currentUser = "Ad";
 var userDataLoaded = false;
-var chosenLeftTable = user;
+var chosenLeftTable = currentUser;
 
 
 function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
-    firebase.database().ref('transactions/' + month).push({
+    console.log("Trans length1: "+ trans.length);
+    var key = firebase.database().ref('transactions/apr').push({
+        active: {isActive: 1},
         kto: kto1,
         komu: komu1,
         co: co1,
         ile: ile1,
         user: user1,
         kiedy: kiedy1
-    });
+    }).key;
 }
 
 function addNewUser(name1, pass1, nick1) {
@@ -57,10 +60,10 @@ function updateData() {
 function updateCenterTable() {
     var x = document.getElementById("tab");
 
-    for(i = tab.rows.length - 1 ; i >= 0 ; i--)
+    for(i = x.rows.length - 1 ; i >= 0 ; i--)
     {
-        if(tab.rows[i].id == 'centerTable') {
-            tab.deleteRow(i);
+        if(x.rows[i].id == 'centerTable') {
+            x.deleteRow(i);
         }
     }
 
@@ -81,6 +84,8 @@ function updateCenterTable() {
         img.width="20";
         img.height="20";
         cell.appendChild(img);
+        cell.setAttribute("id",transKey[i]);
+        cell.setAttribute("onclick","deleteTransaction(this)");
 
         cell = row.insertCell().innerHTML = trans[i].kiedy;
         cell = row.insertCell().innerHTML = trans[i].co;
@@ -93,8 +98,13 @@ function updateCenterTable() {
 }
 
 function updateLeftTable() {
-    var x = document.getElementById("leftTab");
 
+    //insert left user name
+    var leftUser = document.getElementById("leftUser");
+    leftUser.innerHTML=chosenLeftTable;
+
+    var x = document.getElementById("leftTab");
+    //clear table
     for(i = x.rows.length - 1 ; i >= 1 ; i--)
     {
         x.deleteRow(i);
@@ -102,64 +112,81 @@ function updateLeftTable() {
 
     for (var i = 0; i < trans.length; i++) {
 
-        if(trans[i].kto != chosenLeftTable){
+        //choose only user transactions
+        if(trans[i].komu != chosenLeftTable){
             continue;
         }
-
+        //insert row
         var row = x.insertRow();
         row.id = "leftTable";
         var cell;
 
+        //insert trash cell
         cell = row.insertCell();
         var img = document.createElement('img');
         img.src = "trash.png";
         img.width="20";
         img.height="20";
         cell.appendChild(img);
-        cell.setAttribute("id",trans[i].id);
+        cell.setAttribute("id",transKey[i]);
 
+        //insert date cell
         cell = row.insertCell().innerHTML = trans[i].kiedy;
+        //insert thing cell
         cell = row.insertCell().innerHTML = trans[i].co;
+        //insert amount cell
         cell = row.insertCell().innerHTML = trans[i].ile;
-
+        //insert payer cell
+        cell = row.insertCell().innerHTML = trans[i].kto.charAt(0);
     }
 }
 
 function updateRightTable() {
     var x = document.getElementById("rightTab");
-
-    for(i = tab.rows.length - 1 ; i >= 0 ; i--)
+    //clear table
+    for(i = x.rows.length - 1 ; i >= 1 ; i--)
     {
-        if(tab.rows[i].id == 'rightTable') {
-            tab.deleteRow(i);
+        if(x.rows[i].id == 'rightTable') {
+            x.deleteRow(i);
         }
     }
 
     for (var i = 0; i < trans.length; i++) {
 
-        let c = userConfig.tableLayout.right.client;
-        if(trans[i].komu != c){
-            continue;
-        }
+    //    let c = userConfig.tableLayout.right.client;
+    //    if(trans[i].komu != c){
+    //        continue;
+    //    }
 
+        //insert row
         var row = x.insertRow();
         row.id = "rightTable";
         var cell;
 
+        //insert trash cell
         cell = row.insertCell();
         var img = document.createElement('img');
         img.src = "trash.png";
         img.width="20";
         img.height="20";
         cell.appendChild(img);
+        cell.setAttribute("id",transKey[i]);
 
+        //insert date cell
         cell = row.insertCell().innerHTML = trans[i].kiedy;
+        //insert thing cell
         cell = row.insertCell().innerHTML = trans[i].co;
-        let noOfUsers = Object.keys(userConfig.tableLayout.right.users).length;
-        for(var j = 1; j <= noOfUsers; j++) {
-            let u = "user" + j;
-            cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
-        }
+        //insert buyer cell
+        cell = row.insertCell().innerHTML = trans[i].komu;
+        //insert amount cell
+        cell = row.insertCell().innerHTML = trans[i].ile;
+        //insert kto cell
+        cell = row.insertCell().innerHTML = trans[i].kto.charAt(0);
+        // let noOfUsers = Object.keys(userConfig.tableLayout.right.users).length;
+        // for(var j = 1; j <= noOfUsers; j++) {
+        //     let u = "user" + j;
+        //     cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
+        // }
     }
 }
 
@@ -195,7 +222,8 @@ function updateSummaryTable() {
 
         for(username of users) {
             if(username.nick == userConfig.transUsers[u]) {
-                cell.innerHTML = round2Fixed(username.give-username.get);
+                var balance = round2Fixed(username.give-username.get);
+                cell.innerHTML = Number(balance).toLocaleString("pl");
                 break;
             }
         }
@@ -213,8 +241,13 @@ function sendForm() {
     let v4 = form.ile.value;
     let v5 = form.kiedy.value;
 
-    addNewTransaction(v1, v2, v3, v4, v5, user);
-    loadData();
+    v4 = v4.replace(",",".");
+
+    addNewTransaction(v1, v2, v3, v4, v5, currentUser);
+    updateData();
+    //updateCenterTable();
+    //updateLeftTable();
+    //updateRightTable();
     form.reset();
 }
 
@@ -229,7 +262,7 @@ function sendForm() {
 <body>
     <div class="se-pre-con"></div>
 
-    <form id="myForm" onsubmit="sendForm();return false">
+    <form id="myForm" onsubmit="sendForm();return false" metod="post">
         Kto:
         <select name="kto">
         </select>
@@ -243,38 +276,53 @@ function sendForm() {
 
     </form>
 
-    <table id="tab" class="table-fill">
-        <th class="text-left"></th>
-        <th class="text-left">Data</th>
-        <th>Co</th>
-        <th>Ad</th>
-        <th>Kim</th>
-    </table>
 
-    <table id="userChoiceTab" class="table-fill">
-    </table>
-    <table id="leftTab" class="table-fill">
-        <th class="text-left"></th>
-        <th class="text-left">Data</th>
-        <th>Co</th>
-        <th>Ad</th>
-    </table>
+    <div class="container">
 
-    <br>
-    <table id="rightTab" class="table-fill">
-        <th class="text-left"></th>
-        <th class="text-left">Data</th>
-        <th>Co</th>
-        <th>Ad</th>
-        <th>Kim</th>
-        <th>P</th>
-    </table>
-    <br>
+        <div class="column">
+            <table id="userChoiceTab" class="table-fill">
+            </table>
+            <table id="leftTab" class="table-fill">
+                <th class="text-left"></th>
+                <th class="text-left">Data</th>
+                <th>Co</th>
+                <th id="leftUser">user</th>
+                <th>Kto</th>
+            </table>
+        </div>
 
-    <br><br><br>
-    <table id="summary" class="table-fill">
-        <tr><th class="text-center" colspan=3>Podumowanie</th></tr>
-        <tr><td>ff</td><td>2</td><td>3</td></tr>
-    </table>
+        <div class="column">
+            <table id="tab" class="table-fill">
+                <th class="text-left"></th>
+                <th class="text-left">Data</th>
+                <th>Co</th>
+                <th>Ad</th>
+                <th>Kim</th>
+            </table>
+
+            <br><br><br>
+
+            <table id="summary" class="table-fill">
+                <tr><th class="text-center" colspan=3>Podsumowanie</th></tr>
+                <tr><td>1</td><td>2</td><td>3</td></tr>
+            </table>
+        </div>
+
+
+        <div class="column">
+            <table id="rightTab" class="table-fill">
+                <th class="text-left"></th>
+                <th class="text-left">Data</th>
+                <th>Co</th>
+                <th>Ad</th>
+                <th>Kim</th>
+                <th>P</th>
+            </table>
+        </div>
+
+
+
+    </div>
+
 
     </html>

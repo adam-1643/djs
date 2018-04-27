@@ -66,11 +66,16 @@ function setTable(sm) {
 
 function loadData() {
     //load transaction data
-    trans = [];
+    //trans = [];
+    //transKey = [];
     var leadsRef = database.ref('/transactions/' + month);
     leadsRef.on('value', function(snapshot) {
+        trans = [];
+        transKey = [];
         snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
+            transKey.push(childSnapshot.key);
+            console.log(childSnapshot.key);
             trans.push(childData);
         });
         updateData();
@@ -106,7 +111,7 @@ function loadUser() {
     var leadsRef2 = database.ref('users/');
     leadsRef2.on('value', function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
-            if(childSnapshot.val().nick == user) {
+            if(childSnapshot.val().nick == currentUser) {
                 userConfig = childSnapshot.val().config;
             }
         });
@@ -117,8 +122,13 @@ function loadUser() {
 }
 
 function deleteTransaction(id) {
-    var leadsRef = database.ref('transactions/' + month + "/" + id + "/active").set({
-    "isActive": 0
-  });
+
+console.log(id.id);
+
+  //   var leadsRef = database.ref('transactions/' + month + "/" + id + "/active").set({
+  //   "isActive": 0
+  // });
+
+
   //updateCenterTable();
 }

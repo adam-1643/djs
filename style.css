@@ -44,6 +44,17 @@ div.table-title {
    text-transform:uppercase;
 }
 
+/*** KOLUMNY ***/
+.column {
+    float: left;
+    width: 33%;
+}
+
+.container:after {
+    content: "";
+    display: table;
+    clear: both;
+}
 
 /*** Table Styles **/
 
