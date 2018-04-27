@@ -16,9 +16,9 @@ function round2Fixed(value) {
 
 function formatDateString() {
     let d = new Date();
-    year = d.getFullYear();
-    month = d.getMonth()+1;
-    day = d.getDate();
+    let year = d.getFullYear();
+    let month = d.getMonth()+1;
+    let day = d.getDate();
 
     monthString = month < 10 ? "0"+month : month;
     let dateString = year + "-" + monthString + "-" + day;

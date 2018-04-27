@@ -47,12 +47,12 @@ function reloadUserData() {
 function updateUserChoiceTable() {
 
     var x = document.getElementById("userChoiceTab");
-    let noOfUsers = Object.keys(userConfig.tableLayout.center.users).length;
+    let noOfUsers = Object.keys(userConfig.tableLayout.left.users).length;
     var row = x.insertRow();
     for(var i = 1; i <= noOfUsers; i++) {
         var cell = row.insertCell();
         var u = "user" + i;
-        cell.innerHTML = userConfig.tableLayout.center.users[u];
+        cell.innerHTML = userConfig.tableLayout.left.users[u];
         cell.setAttribute("onclick","setTable(this);");
         cell.setAttribute("class","hoverCell");
     }
@@ -125,9 +125,9 @@ function deleteTransaction(id) {
 
 console.log(id.id);
 
-  //   var leadsRef = database.ref('transactions/' + month + "/" + id + "/active").set({
-  //   "isActive": 0
-  // });
+    var leadsRef = database.ref('transactions/' + month + "/" + id.id + "/active").set({
+    "isActive": 0
+  });
 
 
   //updateCenterTable();

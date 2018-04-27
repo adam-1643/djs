@@ -69,6 +69,10 @@ function updateCenterTable() {
 
     for (var i = 0; i < trans.length; i++) {
 
+        if(trans[i].active.isActive == 0) {
+            continue;
+        }
+
         let c = userConfig.tableLayout.center.client;
         if(trans[i].komu != c){
             continue;
@@ -112,6 +116,9 @@ function updateLeftTable() {
 
     for (var i = 0; i < trans.length; i++) {
 
+        if(trans[i].active.isActive == 0) {
+            continue;
+        }
         //choose only user transactions
         if(trans[i].komu != chosenLeftTable){
             continue;
@@ -129,6 +136,7 @@ function updateLeftTable() {
         img.height="20";
         cell.appendChild(img);
         cell.setAttribute("id",transKey[i]);
+        cell.setAttribute("onclick","deleteTransaction(this)");
 
         //insert date cell
         cell = row.insertCell().innerHTML = trans[i].kiedy;
@@ -153,10 +161,25 @@ function updateRightTable() {
 
     for (var i = 0; i < trans.length; i++) {
 
-    //    let c = userConfig.tableLayout.right.client;
-    //    if(trans[i].komu != c){
-    //        continue;
-    //    }
+        if(trans[i].active.isActive == 0) {
+            continue;
+        }
+
+        let c = userConfig.tableLayout.center.client;
+        if(trans[i].komu == c){
+            continue;
+        }
+        var isValid = true;
+        let noOfClients = Object.keys(userConfig.tableLayout.left.users).length;
+        for(var j = 1; j <= noOfClients; j++) {
+            let u = "user" + j;
+            if(userConfig.tableLayout.left.users[u] == trans[i].komu) {
+                isValid = false;
+            }
+        }
+        if(isValid == false) {
+            continue;
+        }
 
         //insert row
         var row = x.insertRow();
@@ -171,6 +194,7 @@ function updateRightTable() {
         img.height="20";
         cell.appendChild(img);
         cell.setAttribute("id",transKey[i]);
+        cell.setAttribute("onclick","deleteTransaction(this)");
 
         //insert date cell
         cell = row.insertCell().innerHTML = trans[i].kiedy;
@@ -193,8 +217,9 @@ function updateRightTable() {
 function updateSummaryTable() {
     var x = document.getElementById("summary");
 
-    x.deleteRow(1);
-    x.deleteRow(0);
+    for(var i = x.rows.length - 1; i >= 0; i--) {
+        x.deleteRow(i)
+    }
 
     let noOfClients = Object.keys(userConfig.transUsers).length;
 
@@ -272,7 +297,7 @@ function sendForm() {
         Ile: <input type="text" name="ile">
         Co: <input type="text" name="co">
         Kiedy:<input type="date" name="kiedy">
-        <input type="submit" value="but">
+        <input type="submit" value="Dodaj">
 
     </form>
 
