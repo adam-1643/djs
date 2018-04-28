@@ -184,3 +184,9 @@ td.text-center {
 td.text-right {
   text-align: right;
 }
+
+
+footer {
+    display: block;
+    text-align: right;
+}

@@ -129,6 +129,10 @@ console.log(id.id);
     "isActive": 0
   });
 
+    document.getElementById("fade").style ="";
+          // Animate loader off screen
+      $(".se-pre-con").fadeOut(1000);
+
 
   //updateCenterTable();
 }
