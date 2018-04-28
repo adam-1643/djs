@@ -17,6 +17,7 @@ $(window).load(function() {
 
 
 var version="0.2.0";
+var versionDate="28-04-2018";
 
 var trans = [];
 var transKey = [];
@@ -56,8 +57,13 @@ loadData();
 function showVersion() {
     //var foot = document.getElementById("footerVersion");
     //foot.innerHTML = "Version " + version;
-    document.getElementById("footerVersion").innerHTML = "Version: " + version;
+    var foot = document.getElementById("footerVersion");
+    foot.innerHTML = "Version: " + version;
+    foot.appendChild(document.createElement("br"));
 
+    //var date = new Date();
+    //foot.innerHTML += formatDateString(date);
+    foot.innerHTML += versionDate;
 }
 
 //console.log(trans.length);
@@ -272,20 +278,55 @@ function sendForm() {
     console.log(form.kto.value + " " + form.komu.value);
 
     let v1 = form.kto.value;
-    let v2 = form.komu.value;
-    let v3 = form.co.value;
-    let v4 = form.ile.value;
     let v5 = form.kiedy.value;
 
-    v4 = v4.replace(",",".");
+    var noOfLines = document.getElementsByClassName("addButton")[0].name.substr(1) - 1;
 
-    addNewTransaction(v1, v2, v3, v4, v5, currentUser);
-    updateData();
-    //updateCenterTable();
-    //updateLeftTable();
-    //updateRightTable();
-    form.reset();
-    form.kiedy.value = formatDateString();
+    if(noOfLines == 0) {
+        let v2 = form.komu.value;
+        let v3 = form.co.value;
+        let v4 = form.ile.value;
+        v4 = v4.replace(",",".");
+        addNewTransaction(v1, v2, v3, v4, v5, currentUser);
+
+        updateData();
+        form.reset();
+        form.kiedy.value = formatDateString();
+
+    } else {
+        var sumOfTrans = 0;
+        for(var i = 1; i <= noOfLines; i++) {
+            console.log(form["ile"+i].value);
+            let g2 = form["komu"+i].value;
+            let g3 = form["co"+i].value;
+            let g4 = form["ile"+i].value;
+            g4 = g4.replace(",",".");
+            sumOfTrans += Number(g4);
+            addNewTransaction(v1, g2, g3, g4, v5, currentUser);
+        }
+        let v2 = form.komu.value;
+        let v3 = form.co.value;
+        let v4 = form.ile.value;
+        v4 = v4.replace(",",".");
+
+        if(v4 > 0) {
+            if(sumOfTrans > v4) {
+                window.alert("Suma transakcji jest za duża");
+                return;
+            }
+
+            v4 = v4 - sumOfTrans;
+            addNewTransaction(v1, v2, v3, v4, v5, currentUser);
+
+            updateData();
+            form.reset();
+            form.kiedy.value = formatDateString();
+        } else {
+            updateData();
+            form.reset();
+            form.kiedy.value = formatDateString();
+        }
+    }
 }
 
 function test11(number) {
@@ -356,7 +397,7 @@ function test11(number) {
         Kiedy:<input type="date" name="kiedy">
         <input type="submit" value="Dodaj">
         <br>
-        <input type="button" value="+" name="a1" onclick="test11(1)">
+        <input type="button" value="+" name="a1" onclick="test11(1)" class="addButton">
 
     </form>
 
