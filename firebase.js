@@ -127,12 +127,11 @@ console.log(id.id);
 
     var leadsRef = database.ref('transactions/' + month + "/" + id.id + "/active").set({
     "isActive": 0
+  }).then(function() {
+      var modal = document.getElementById('failureAlert');
+      modal.style.display = "block";
+          $(".failureModal").fadeOut(3000);
   });
-
-    document.getElementById("fade").style ="";
-          // Animate loader off screen
-      $(".se-pre-con").fadeOut(1000);
-
 
   //updateCenterTable();
 }

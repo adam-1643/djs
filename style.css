@@ -190,3 +190,48 @@ footer {
     display: block;
     text-align: right;
 }
+
+.successModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 0px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 80px; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+.failureModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 0px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 80px; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+
+/* Modal Content */
+.successModal-content {
+    background-color: #00FF00;
+    margin: auto;
+    padding: 0px;
+    border: 1px solid #00FF00;
+    border-radius: 10px;
+    width: 100px;
+    text-align: center;
+}
+.failureModal-content {
+    background-color: #FF0000;
+    margin: auto;
+    padding: 0px;
+    border: 1px solid #FF0000;
+    border-radius: 10px;
+    width: 100px;
+    text-align: center;
+}

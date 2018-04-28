@@ -41,7 +41,11 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
         ile: ile1,
         user: user1,
         kiedy: kiedy1
-    }).key;
+    }).then(function() {
+        var modal = document.getElementById('successAlert');
+        modal.style.display = "block";
+            $(".successModal").fadeOut(3000);
+    });
 }
 
 function addNewUser(name1, pass1, nick1) {
@@ -445,7 +449,21 @@ function test11(number) {
             </table>
         </div>
 
+    </div>
 
+    <div id="successAlert" class="successModal">
+
+      <div class="successModal-content">
+        <p>Dodano</p>
+      </div>
+
+    </div>
+
+    <div id="failureAlert" class="failureModal">
+
+      <div class="failureModal-content">
+        <p>Usunięto</p>
+      </div>
 
     </div>
 
