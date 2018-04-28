@@ -16,20 +16,23 @@ $(window).load(function() {
 });
 
 
+var version="0.2.0";
+
 var trans = [];
 var transKey = [];
 var users = [];
 var clients = [];
-var month = 'apr';
+var month = 'testBase';
 var userConfig;
 var currentUser = "Ad";
 var userDataLoaded = false;
 var chosenLeftTable = currentUser;
 
 
+
 function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
     console.log("Trans length1: "+ trans.length);
-    var key = firebase.database().ref('transactions/apr').push({
+    var key = firebase.database().ref('transactions/' + month).push({
         active: {isActive: 1},
         kto: kto1,
         komu: komu1,
@@ -49,6 +52,14 @@ function addNewUser(name1, pass1, nick1) {
 }
 loadUser();
 loadData();
+
+function showVersion() {
+    //var foot = document.getElementById("footerVersion");
+    //foot.innerHTML = "Version " + version;
+    document.getElementById("footerVersion").innerHTML = "Version: " + version;
+
+}
+
 //console.log(trans.length);
 function updateData() {
     calculate();
@@ -274,6 +285,52 @@ function sendForm() {
     //updateLeftTable();
     //updateRightTable();
     form.reset();
+    form.kiedy.value = formatDateString();
+}
+
+function test11(number) {
+    // Number of inputs to create
+//    var number = document.getElementById("member").value;
+    // Container <div> where dynamic content will be placed
+    var form = document.getElementById("myForm");
+    // Clear previous contents of the container
+    //    while (container.hasChildNodes()) {
+    //    container.removeChild(container.lastChild);
+    //    }
+
+    // Append a node with a random text
+    //container.appendChild(document.createTextNode("Member " + (i+1)));
+    // Create an <input> element, set its type and name attributes
+
+
+    input = document.createElement("select");
+    //input.type = "select";
+    input.name = "komu" + number;
+
+    for(var i = 0; i < clients.length; i++) {
+        var opt = document.createElement('option');
+        opt.value = clients[i].name;
+        opt.innerHTML = clients[i].name;
+        input.appendChild(opt);
+    }
+    form.appendChild(input);
+
+    var input = document.createElement("input");
+    input.type = "text";
+    input.name = "ile" + number;
+    form.appendChild(input);
+    // Append a line break
+    var input = document.createElement("input");
+    input.type = "text";
+    input.name = "co" + number;
+    form.appendChild(input);
+
+    //form["a" + Number(number)].setAttribute = ("onclick","test11("+ Number(number+1) +");");
+    form["a" + Number(number)].onclick = function(){test11(number+1)};
+    form["a" + Number(number)].name = "a" + Number(number + 1);
+
+    form.appendChild(document.createElement("br"));
+
 }
 
 </script>
@@ -285,7 +342,7 @@ function sendForm() {
 </head>
 
 <body>
-    <div class="se-pre-con"></div>
+    <div class="se-pre-con" id="fade"></div>
 
     <form id="myForm" onsubmit="sendForm();return false" metod="post">
         Kto:
@@ -298,6 +355,8 @@ function sendForm() {
         Co: <input type="text" name="co">
         Kiedy:<input type="date" name="kiedy">
         <input type="submit" value="Dodaj">
+        <br>
+        <input type="button" value="+" name="a1" onclick="test11(1)">
 
     </form>
 
@@ -349,5 +408,7 @@ function sendForm() {
 
     </div>
 
-
+    <footer id="footerVersion"></footer>
     </html>
+
+    <script>showVersion()</script>
