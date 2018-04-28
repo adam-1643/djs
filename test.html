@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+
+<script src="firebase.js"></script>
+<script src="external.js"></script>
+<script src="logics.js"></script>
+
+<link rel="stylesheet" href="style.css">
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 0px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 80px; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+
+/* Modal Content */
+.modal-content {
+    background-color: #00FF00;
+    margin: auto;
+    padding: 0px;
+    border: 1px solid #00FF00;
+    border-radius: 10px;
+    width: 100px;
+    text-align: center;
+}
+
+
+</style>
+</head>
+<body>
+
+<button id="myBtn">Open Modal</button>
+
+
+<div id="myModal" class="modal">
+
+  <div class="modal-content">
+    <p>Dodano</p>
+  </div>
+
+</div>
+
+<script>
+    var btn = document.getElementById("myBtn");
+    btn.onclick = function() {
+    var modal = document.getElementById('myModal');
+    modal.style.display = "block";
+        $(".modal").fadeOut(3000);
+}
+</script>
+
+</body>
+</html>
