@@ -46,7 +46,22 @@ div.table-title {
 
 .hoverCell:hover {
 
-    background:#00FF00;
+    background:#00FF00 !important;
+}
+
+.hoverCell {
+
+    background:#EEEEEE !important;
+}
+
+.hover2Cell {
+
+    background:#FF0000 !important;
+}
+
+.hover2Cell:hover {
+
+    background:#FF0000 !important;
 }
 
 th {

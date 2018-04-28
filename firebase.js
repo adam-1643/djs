@@ -32,6 +32,9 @@ function reloadUserData() {
         opt.value = users[i].nick;
         opt.innerHTML = users[i].nick;
         form.kto.appendChild(opt);
+        if(users[i].nick == currentUser) {
+            form.kto.selectedIndex = i;
+        }
     }
 
     for(var i = 0; i < clients.length; i++) {
@@ -39,6 +42,9 @@ function reloadUserData() {
         opt.value = clients[i].name;
         opt.innerHTML = clients[i].name;
         form.komu.appendChild(opt);
+        if(clients[i].name == currentUser) {
+            form.komu.selectedIndex = i;
+        }
     }
 
     form.kiedy.value = formatDateString();
@@ -55,12 +61,23 @@ function updateUserChoiceTable() {
         cell.innerHTML = userConfig.tableLayout.left.users[u];
         cell.setAttribute("onclick","setTable(this);");
         cell.setAttribute("class","hoverCell");
+        //cell.setAttribute("")
+        if(userConfig.tableLayout.left.users[u] == currentUser) {
+            cell.setAttribute("class", "hover2Cell");
+        }
     }
 }
 
 function setTable(sm) {
+    var x = document.getElementById("userChoiceTab");
+    let noOfUsers = Object.keys(userConfig.tableLayout.left.users).length;
+    for(var i = 0; i < noOfUsers; i++) {
+        var cell = x.rows[0].cells[i];
+        cell.setAttribute("class","hoverCell");
+    }
     console.log(sm.innerHTML);
     chosenLeftTable = sm.innerHTML;
+    sm.setAttribute("class","hover2Cell");
     updateLeftTable();
 }
 

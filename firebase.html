@@ -28,7 +28,7 @@ var users = [];
 var clients = [];
 var month = 'testBase';
 var userConfig;
-var currentUser = "Ad";
+var currentUser = "Kima";
 var userDataLoaded = false;
 var chosenLeftTable = currentUser;
 
@@ -166,15 +166,22 @@ function updateLeftTable() {
         cell.appendChild(img);
         cell.setAttribute("id",transKey[i]);
         cell.setAttribute("onclick","deleteTransaction(this)");
+        cell.setAttribute("class","leftTrashClass");
 
         //insert date cell
-        cell = row.insertCell().innerHTML = trans[i].kiedy;
+        cell = row.insertCell();
+        cell.innerHTML = trans[i].kiedy;
+        cell.className = "leftDateClass";
         //insert thing cell
         cell = row.insertCell().innerHTML = trans[i].co;
         //insert amount cell
-        cell = row.insertCell().innerHTML = trans[i].ile;
+        cell = row.insertCell();
+        cell.innerHTML = round2Fixed(trans[i].ile).toLocaleString("pl") + " zł";
+        cell.className = "leftName1Class";
         //insert payer cell
-        cell = row.insertCell().innerHTML = trans[i].kto.charAt(0);
+        cell = row.insertCell();
+        cell.innerHTML = trans[i].kto.charAt(0);
+        cell.className = "leftName2Class";
     }
 }
 

@@ -7,14 +7,11 @@ th.leftDateClass {
 	text-align: center;
 }
 
-th.leftName1Class {
-	width: 50px;
+th.leftNameClass {
+	width: 70px;
 	text-align: center;
 }
-th.leftName2Class {
-	width: 50px;
-	text-align: center;
-}
+
 
 td.leftTrashClass {
 	width: 10px;
@@ -25,15 +22,10 @@ td.leftDateClass {
 }
 
 td.leftName1Class {
-	width: 50px;
+	width: 60px;
 	text-align: right;
 }
 td.leftName2Class {
-	width: 50px;
-	text-align: right;
-}
-
-td.leftNameClass {
-	width: 50px;
+	width: 10px;
 	text-align: right;
 }
