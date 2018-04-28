@@ -6,7 +6,10 @@
 <script src="external.js"></script>
 <script src="logics.js"></script>
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/tables.css">
+<link rel="stylesheet" href="css/centerTable.css">
+<link rel="stylesheet" href="css/leftTable.css">
 
 <script>
 // Wait for window load
@@ -111,13 +114,18 @@ function updateCenterTable() {
         cell.appendChild(img);
         cell.setAttribute("id",transKey[i]);
         cell.setAttribute("onclick","deleteTransaction(this)");
+        cell.setAttribute("class","centerTrashClass");
 
-        cell = row.insertCell().innerHTML = trans[i].kiedy;
+        cell = row.insertCell();
+        cell.innerHTML = trans[i].kiedy;
+        cell.className = "centerDateClass";
         cell = row.insertCell().innerHTML = trans[i].co;
         let noOfUsers = Object.keys(userConfig.tableLayout.center.users).length;
         for(var j = 1; j <= noOfUsers; j++) {
             let u = "user" + j;
-            cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
+            cell = row.insertCell();
+            cell.innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? round2Fixed(trans[i].ile).toLocaleString("pl") + " zł" : "";
+            cell.className = "centerName" + j + "Class";
         }
     }
 }
@@ -338,15 +346,6 @@ function test11(number) {
 //    var number = document.getElementById("member").value;
     // Container <div> where dynamic content will be placed
     var form = document.getElementById("myForm");
-    // Clear previous contents of the container
-    //    while (container.hasChildNodes()) {
-    //    container.removeChild(container.lastChild);
-    //    }
-
-    // Append a node with a random text
-    //container.appendChild(document.createTextNode("Member " + (i+1)));
-    // Create an <input> element, set its type and name attributes
-
 
     input = document.createElement("select");
     //input.type = "select";
@@ -412,25 +411,23 @@ function test11(number) {
             <table id="userChoiceTab" class="table-fill">
             </table>
             <table id="leftTab" class="table-fill">
-                <th class="text-left"></th>
-                <th class="text-left">Data</th>
-                <th>Co</th>
-                <th id="leftUser">user</th>
-                <th>Kto</th>
+                <th class="leftTrashClass"></th>
+                <th class="leftDateClass">Data</th>
+                <th class="leftThingClass">Co</th>
+                <th class="leftNameClass" id="leftUser" colspan="2">user</th>
             </table>
         </div>
 
         <div class="column">
             <table id="tab" class="table-fill">
-                <th class="text-left"></th>
-                <th class="text-left">Data</th>
-                <th>Co</th>
-                <th>Ad</th>
-                <th>Kim</th>
+                <th class="centerTrashClass"></th>
+                <th class="centerTateClass">Data</th>
+                <th class="centerThingClass">Co</th>
+                <th class="centerName1Class">Ad</th>
+                <th class="centerName2Class">Kim</th>
             </table>
 
             <br><br><br>
-
             <table id="summary" class="table-fill">
                 <tr><th class="text-center" colspan=3>Podsumowanie</th></tr>
                 <tr><td>u1</td><td>u2</td><td>u3</td></tr>

@@ -1,0 +1,39 @@
+th.leftTrashClass {
+	width: 10px;
+}
+
+th.leftDateClass {
+	width:70px;
+	text-align: center;
+}
+
+th.leftName1Class {
+	width: 50px;
+	text-align: center;
+}
+th.leftName2Class {
+	width: 50px;
+	text-align: center;
+}
+
+td.leftTrashClass {
+	width: 10px;
+}
+
+td.leftDateClass {
+	width:70px;
+}
+
+td.leftName1Class {
+	width: 50px;
+	text-align: right;
+}
+td.leftName2Class {
+	width: 50px;
+	text-align: right;
+}
+
+td.leftNameClass {
+	width: 50px;
+	text-align: right;
+}
