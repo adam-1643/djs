@@ -32,3 +32,11 @@ function encodeNumber(num) {
 function decodeNumber(num) {
     return +(num.replace(".", ","));
 }
+
+function openNav() {
+    document.getElementById("mySidenav").style.width = "30%";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}

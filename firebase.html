@@ -10,12 +10,13 @@
 <link rel="stylesheet" href="css/tables.css">
 <link rel="stylesheet" href="css/centerTable.css">
 <link rel="stylesheet" href="css/leftTable.css">
+<link rel="stylesheet" href="css/leftSlideMenu.css">
 
 <script>
 // Wait for window load
 $(window).load(function() {
     // Animate loader off screen
-    $(".se-pre-con").fadeOut(2500);
+    $(".se-pre-con").fadeOut(1500);
 });
 
 
@@ -26,7 +27,7 @@ var trans = [];
 var transKey = [];
 var users = [];
 var clients = [];
-var month = 'testBase';
+var month = 'testBase2';
 var userConfig;
 var currentUser = "Kima";
 var userDataLoaded = false;
@@ -294,7 +295,8 @@ function updateSummaryTable() {
 
 function sendForm() {
     var form = document.getElementById("myForm");
-    console.log(form.kto.value + " " + form.komu.value);
+    //console.log(form.kto.value + " " + form.komu.value);
+    form.zwrot.disabled = false;
 
     let v1 = form.kto.value;
     let v5 = form.kiedy.value;
@@ -303,7 +305,8 @@ function sendForm() {
 
     if(noOfLines == 0) {
         let v2 = form.komu.value;
-        let v3 = form.co.value;
+        console.log("czy forma? " + form.zwrot.checked);
+        let v3 = form.zwrot.checked == true ? "(Z) " + form.co.value : form.co.value;
         let v4 = form.ile.value;
         v4 = v4.replace(",",".");
         addNewTransaction(v1, v2, v3, v4, v5, currentUser);
@@ -317,7 +320,7 @@ function sendForm() {
         for(var i = 1; i <= noOfLines; i++) {
             console.log(form["ile"+i].value);
             let g2 = form["komu"+i].value;
-            let g3 = form["co"+i].value;
+            let g3 = form.zwrot.checked == true ? "(Z) " + form["co"+i].value : form["co"+i].value;
             let g4 = form["ile"+i].value;
             g4 = g4.replace(",",".");
             sumOfTrans += Number(g4);
@@ -352,7 +355,15 @@ function test11(number) {
     // Number of inputs to create
 //    var number = document.getElementById("member").value;
     // Container <div> where dynamic content will be placed
+
     var form = document.getElementById("myForm");
+
+    if(form.zwrot.checked == true) {
+        return;
+    }
+
+    form.zwrot.disabled = true;
+    form.zwrot.checked = false;
 
     input = document.createElement("select");
     //input.type = "select";
@@ -384,6 +395,16 @@ function test11(number) {
 
 }
 
+function checkbox(box) {
+    var form = document.getElementById("myForm");
+
+    if(box.checked == true) {
+        form.ile.setAttribute("style","color: #000000;border-color: blue;");
+    } else {
+        form.ile.setAttribute("style","color: #000000;border-color: red;");
+    }
+}
+
 </script>
 
 
@@ -395,6 +416,7 @@ function test11(number) {
 <body>
     <div class="se-pre-con" id="fade"></div>
 
+
     <form id="myForm" onsubmit="sendForm();return false" metod="post">
         Kto:
         <select name="kto">
@@ -402,14 +424,20 @@ function test11(number) {
         Komu:
         <select name="komu">
         </select>
-        Ile: <input type="text" name="ile">
+        Ile: <input type="text" style="color: #000000;border-color: red;" name="ile">
         Co: <input type="text" name="co">
+        <input type="checkbox" name="zwrot" onclick="checkbox(this);">
         Kiedy:<input type="date" name="kiedy">
         <input type="submit" value="Dodaj">
         <br>
         <input type="button" value="+" name="a1" onclick="test11(1)" class="addButton">
 
     </form>
+
+
+    <div style="text-align:right">
+        <span style="font-size:20px;cursor:pointer;align:right" onclick="openNav()">&#9776; Statystyki</span>
+    </div>
 
 
     <div class="container">
@@ -468,6 +496,18 @@ function test11(number) {
       <div class="failureModal-content">
         <p>Usunięto</p>
       </div>
+
+    </div>
+
+
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <p>Podsumowanie:</p>
+        <div id="summaryNav">
+
+
+        </div>
 
     </div>
 
