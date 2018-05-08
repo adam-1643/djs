@@ -21,7 +21,8 @@ function formatDateString() {
     let day = d.getDate();
 
     monthString = month < 10 ? "0"+month : month;
-    let dateString = year + "-" + monthString + "-" + day;
+    dayString = day < 10 ? "0" + day : day;
+    let dateString = year + "-" + monthString + "-" + dayString;
     return dateString;
 }
 
