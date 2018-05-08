@@ -4,11 +4,12 @@
     position: fixed;
     z-index: 1;
     top: 0;
-    left: 0;
+    left: -6px;
     background-color: #44FF33;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+    border: 3px solid black;
 }
 
 .sidenav p {

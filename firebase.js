@@ -59,7 +59,7 @@ function downloadObjectAsJson(exportObj, exportName){
    downloadAnchorNode.remove();
  }
 
- 
+
 
 function updateUserChoiceTable() {
 
@@ -107,6 +107,10 @@ function loadData() {
             trans.push(childData);
         });
         updateData();
+
+        $(".se-pre-con").fadeOut(500);
+
+
     });
 }
 

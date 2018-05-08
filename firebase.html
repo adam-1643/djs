@@ -14,10 +14,10 @@
 
 <script>
 // Wait for window load
-$(window).load(function() {
-    // Animate loader off screen
-    $(".se-pre-con").fadeOut(1500);
-});
+// $(window).load(function() {
+//     // Animate loader off screen
+//     $(".se-pre-con").fadeOut(1500);
+// });
 
 
 var version="0.3.0";
@@ -236,11 +236,29 @@ function updateRightTable() {
         //insert date cell
         cell = row.insertCell().innerHTML = trans[i].kiedy;
         //insert thing cell
-        cell = row.insertCell().innerHTML = trans[i].co;
+        cell = row.insertCell();
+
+        var img = document.createElement('img');
+        img.src = "images/editButton.png";
+        img.width="10";
+        img.height="10";
+        img.setAttribute("class","editButton");
+        cell.appendChild(img);
+        cell.setAttribute("id",transKey[i]);
+
+        cell.innerHTML += trans[i].co;
+
+
+
+        cell.setAttribute("onclick","ttt(this)");
         //insert buyer cell
         cell = row.insertCell().innerHTML = trans[i].komu;
         //insert amount cell
-        cell = row.insertCell().innerHTML = trans[i].ile;
+        cell = row.insertCell();
+        cell.innerHTML = trans[i].ile;
+        cell.setAttribute("onclick","ttt(this);");
+        cell.setAttribute("onblur", "ttt2(this);");
+        //cell.setAttribute("contenteditable", "true");
         //insert kto cell
         cell = row.insertCell().innerHTML = trans[i].kto.charAt(0);
         // let noOfUsers = Object.keys(userConfig.tableLayout.right.users).length;
@@ -248,6 +266,37 @@ function updateRightTable() {
         //     let u = "user" + j;
         //     cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
         // }
+    }
+}
+
+function ttt(cell) {
+    var row = cell.parentElement;
+
+    for(var  i = row.cells.length-1; i > 0; i--) {
+        row.cells[i].setAttribute("contenteditable", "true");
+    }
+    row.cells[0].firstElementChild.src = "images/editButton.png";
+    row.cells[0].setAttribute("onclick","uuu(this)");
+
+    //cell.setAttribute("contenteditable", "true");
+}
+
+function uuu(cell) {
+    console.log("uuu");
+    var row = cell.parentElement;
+
+    for(var  i = row.cells.length-1; i > 0; i--) {
+        row.cells[i].setAttribute("contenteditable", "false");
+    }
+    row.cells[0].firstElementChild.src = "trash.png";
+    row.cells[0].setAttribute("onclick","deleteTransaction(this)");
+}
+
+function ttt2(cell) {
+    var row = cell.parentElement;
+
+    for(var  i = row.cells.length-1; i > 0; i--) {
+        row.cells[i].setAttribute("contenteditable", "false");
     }
 }
 
@@ -285,6 +334,9 @@ function updateSummaryTable() {
         for(username of users) {
             if(username.nick == userConfig.transUsers[u]) {
                 var balance = round2Fixed(username.give-username.get);
+                if(balance < 0) {
+                    cell.setAttribute("style","color: red;");
+                }
                 cell.innerHTML = Number(balance).toLocaleString("pl");
                 break;
             }
@@ -364,6 +416,7 @@ function test11(number) {
 
     form.zwrot.disabled = true;
     form.zwrot.checked = false;
+    form.remove.disabled = false;
 
     input = document.createElement("select");
     //input.type = "select";
@@ -395,13 +448,59 @@ function test11(number) {
 
 }
 
+
+
+
+function test11minus() {
+    // Number of inputs to create
+//    var number = document.getElementById("member").value;
+    // Container <div> where dynamic content will be placed
+
+    var form = document.getElementById("myForm");
+    //
+    // if(form.zwrot.checked == true) {
+    //     return;
+    // }
+    //
+    // form.zwrot.disabled = true;
+    // form.zwrot.checked = false;
+
+    if (form.lastChild.nodeName == "#text") {
+
+        form.zwrot.disabled = false;
+        form.remove.disabled = true;
+
+        return;
+    }
+
+    for(var i = 0; i < 4; i++) {
+        form.removeChild(form.lastChild);
+    }
+
+    if (form.lastChild.nodeName == "#text") {
+
+        form.zwrot.disabled = false;
+        form.remove.disabled = true;
+
+        return;
+    }
+
+}
+
+
+
+
+
+
 function checkbox(box) {
     var form = document.getElementById("myForm");
 
     if(box.checked == true) {
         form.ile.setAttribute("style","color: #000000;border-color: blue;");
+        form.a1.disabled = true;
     } else {
         form.ile.setAttribute("style","color: #000000;border-color: red;");
+        form.a1.disabled = false;
     }
 }
 
@@ -431,6 +530,8 @@ function checkbox(box) {
         <input type="submit" value="Dodaj">
         <br>
         <input type="button" value="+" name="a1" onclick="test11(1)" class="addButton">
+        <input type="button" value="-" name="remove" disabled="true" onclick="test11minus()" class="addButton">
+        <br>
 
     </form>
 
@@ -445,8 +546,8 @@ function checkbox(box) {
             </table>
             <table id="leftTab" class="table-fill">
                 <th class="leftTrashClass"></th>
-                <th class="leftDateClass">Data</th>
-                <th class="leftThingClass">Co</th>
+                <th class="leftDateClass"><b>Data</b></th>
+                <th class="leftThingClass"><b>Co</b></th>
                 <th class="leftNameClass" id="leftUser" colspan="2">user</th>
             </table>
         </div>
@@ -454,10 +555,10 @@ function checkbox(box) {
         <div class="column">
             <table id="tab" class="table-fill">
                 <th class="centerTrashClass"></th>
-                <th class="centerTateClass">Data</th>
-                <th class="centerThingClass">Co</th>
-                <th class="centerName1Class">Ad</th>
-                <th class="centerName2Class">Kim</th>
+                <th class="centerTateClass"><b>Data</b></th>
+                <th class="centerThingClass"><b>Co</b></th>
+                <th class="centerName1Class"><b>Ad</b></th>
+                <th class="centerName2Class"><b>Kim</b></th>
             </table>
 
             <br><br><br>
@@ -471,11 +572,11 @@ function checkbox(box) {
         <div class="column">
             <table id="rightTab" class="table-fill">
                 <th class="text-left"></th>
-                <th class="text-left">Data</th>
-                <th>Co</th>
-                <th>Ad</th>
-                <th>Kim</th>
-                <th>P</th>
+                <th class="text-left"><b>Data</b></th>
+                <th><b>Co</b></th>
+                <th><b>Ad</b></th>
+                <th><b>Kim</b></th>
+                <th><b>P</b></th>
             </table>
         </div>
 
