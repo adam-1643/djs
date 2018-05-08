@@ -17,7 +17,8 @@
 <script>
 
 function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
-    console.log("Trans length1: "+ trans.length);
+
+    // add or update transaction
     var key = firebase.database().ref('transactions/' + month).push({
         active: {isActive: 1},
         kto: kto1,
@@ -27,6 +28,7 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
         user: user1,
         kiedy: kiedy1
     }).then(function() {
+        //display notification after added transaction
         var modal = document.getElementById('successAlert');
         modal.style.display = "block";
         $(".successModal").fadeOut(3000);
@@ -34,17 +36,20 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
 }
 
 function addNewUser(name1, pass1, nick1) {
+    //add new user
     firebase.database().ref('users/').push({
         name: name1,
         pass: pass1,
         nick: nick1
     });
 }
+
+
 loadUser();
 loadData();
 
 function showVersion() {
-
+    //show current version
     var foot = document.getElementById("footerVersion");
     foot.innerHTML = "Version: " + version;
     foot.appendChild(document.createElement("br"));
@@ -52,7 +57,6 @@ function showVersion() {
     foot.innerHTML += versionDate;
 }
 
-//console.log(trans.length);
 function updateData() {
     calculate();
     updateCenterTable();
@@ -70,7 +74,6 @@ function updateSummaryTable() {
     let noOfClients = Object.keys(userConfig.transUsers).length;
 
     var headerRow = x.insertRow();
-    //headerRow.colspan = Object.keys(userConfig.transUsers).length;
     headerCell = document.createElement('th');
     headerCell.colSpan = noOfClients;
     headerCell.innerHTML = "Podsumowanie";
@@ -165,8 +168,6 @@ function sendForm() {
 
 function test11(number) {
     // Number of inputs to create
-    //    var number = document.getElementById("member").value;
-    // Container <div> where dynamic content will be placed
 
     var form = document.getElementById("myForm");
 
@@ -213,17 +214,8 @@ function test11(number) {
 
 function test11minus() {
     // Number of inputs to create
-    //    var number = document.getElementById("member").value;
-    // Container <div> where dynamic content will be placed
 
     var form = document.getElementById("myForm");
-    //
-    // if(form.zwrot.checked == true) {
-    //     return;
-    // }
-    //
-    // form.zwrot.disabled = true;
-    // form.zwrot.checked = false;
 
     if (form.lastChild.nodeName == "#text") {
 
@@ -247,11 +239,6 @@ function test11minus() {
 
 }
 
-
-
-
-
-
 function checkbox(box) {
     var form = document.getElementById("myForm");
 
@@ -263,7 +250,6 @@ function checkbox(box) {
         form.a1.disabled = false;
     }
 }
-
 </script>
 
 
@@ -273,9 +259,10 @@ function checkbox(box) {
 </head>
 
 <body>
+    <!--Loading graphics-->
     <div class="se-pre-con" id="fade"></div>
 
-
+    <!--Form to add new transaction-->
     <form id="myForm" onsubmit="sendForm();return false" metod="post">
         Kto:
         <select name="kto">
@@ -292,18 +279,19 @@ function checkbox(box) {
         <input type="button" value="+" name="a1" onclick="test11(1)" class="addButton">
         <input type="button" value="-" name="remove" disabled="true" onclick="test11minus()" class="addButton">
         <br>
-
     </form>
 
-
-
-
-
+    <!--Column container-->
     <div class="container">
 
+        <!--Left column---->
         <div class="column">
+
+            <!--Table with user choice-->
             <table id="userChoiceTab" class="table-fill">
             </table>
+
+            <!--User table-->
             <table id="leftTab" class="table-fill">
                 <th class="leftTrashClass"></th>
                 <th class="leftDateClass"><b>Data</b></th>
@@ -312,24 +300,31 @@ function checkbox(box) {
             </table>
         </div>
 
+        <!--Center column-->
         <div class="column">
+
+            <!--Center group table-->
             <table id="tab" class="table-fill">
                 <th class="centerTrashClass"></th>
-                <th class="centerTateClass"><b>Data</b></th>
+                <th class="centerDateClass"><b>Data</b></th>
                 <th class="centerThingClass"><b>Co</b></th>
                 <th class="centerName1Class"><b>Ad</b></th>
                 <th class="centerName2Class"><b>Kim</b></th>
             </table>
 
             <br><br><br>
+
+            <!--Summary table-->
             <table id="summary" class="table-fill">
                 <tr><th class="text-center" colspan=3>Podsumowanie</th></tr>
                 <tr><td>u1</td><td>u2</td><td>u3</td></tr>
             </table>
         </div>
 
-
+        <!--Right column-->
         <div class="column">
+
+            <!--Right table-->
             <table id="rightTab" class="table-fill">
                 <th class="text-left"></th>
                 <th class="text-left"><b>Data</b></th>
@@ -342,6 +337,7 @@ function checkbox(box) {
 
     </div>
 
+    <!--Success animation-->
     <div id="successAlert" class="successModal">
 
         <div class="successModal-content">
@@ -350,6 +346,7 @@ function checkbox(box) {
 
     </div>
 
+    <!--Deleted animation-->
     <div id="failureAlert" class="failureModal">
 
         <div class="failureModal-content">
@@ -358,22 +355,22 @@ function checkbox(box) {
 
     </div>
 
-
-
+    <!--Sidenav-->
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <p>Podsumowanie:</p>
         <div id="summaryNav">
 
-
         </div>
 
     </div>
 
+    <!--Sidenav button-->
     <div id="openSidebar">
         <img src="images/rightArrow.png" onclick="openNav()" id="ccc"></img>
     </div>
 
+    <!--Footer container-->
     <footer id="footerVersion"></footer>
     </html>
 
