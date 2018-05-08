@@ -2,6 +2,8 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
 
+<script src="config.js"></script>
+<script src="tables.js"></script>
 <script src="firebase.js"></script>
 <script src="external.js"></script>
 <script src="logics.js"></script>
@@ -13,27 +15,6 @@
 <link rel="stylesheet" href="css/leftSlideMenu.css">
 
 <script>
-// Wait for window load
-// $(window).load(function() {
-//     // Animate loader off screen
-//     $(".se-pre-con").fadeOut(1500);
-// });
-
-
-var version="0.3.0";
-var versionDate="28-04-2018";
-
-var trans = [];
-var transKey = [];
-var users = [];
-var clients = [];
-var month = 'testBase2';
-var userConfig;
-var currentUser = "Kima";
-var userDataLoaded = false;
-var chosenLeftTable = currentUser;
-
-
 
 function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
     console.log("Trans length1: "+ trans.length);
@@ -48,7 +29,7 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
     }).then(function() {
         var modal = document.getElementById('successAlert');
         modal.style.display = "block";
-            $(".successModal").fadeOut(3000);
+        $(".successModal").fadeOut(3000);
     });
 }
 
@@ -63,14 +44,11 @@ loadUser();
 loadData();
 
 function showVersion() {
-    //var foot = document.getElementById("footerVersion");
-    //foot.innerHTML = "Version " + version;
+
     var foot = document.getElementById("footerVersion");
     foot.innerHTML = "Version: " + version;
     foot.appendChild(document.createElement("br"));
 
-    //var date = new Date();
-    //foot.innerHTML += formatDateString(date);
     foot.innerHTML += versionDate;
 }
 
@@ -80,224 +58,6 @@ function updateData() {
     updateCenterTable();
     updateLeftTable();
     updateRightTable();
-}
-
-function updateCenterTable() {
-    var x = document.getElementById("tab");
-
-    for(i = x.rows.length - 1 ; i >= 0 ; i--)
-    {
-        if(x.rows[i].id == 'centerTable') {
-            x.deleteRow(i);
-        }
-    }
-
-    for (var i = 0; i < trans.length; i++) {
-
-        if(trans[i].active.isActive == 0) {
-            continue;
-        }
-
-        let c = userConfig.tableLayout.center.client;
-        if(trans[i].komu != c){
-            continue;
-        }
-
-        var row = x.insertRow();
-        row.id = "centerTable";
-        var cell;
-
-        cell = row.insertCell();
-        var img = document.createElement('img');
-        img.src = "trash.png";
-        img.width="20";
-        img.height="20";
-        cell.appendChild(img);
-        cell.setAttribute("id",transKey[i]);
-        cell.setAttribute("onclick","deleteTransaction(this)");
-        cell.setAttribute("class","centerTrashClass");
-
-        cell = row.insertCell();
-        cell.innerHTML = trans[i].kiedy;
-        cell.className = "centerDateClass";
-        cell = row.insertCell().innerHTML = trans[i].co;
-        let noOfUsers = Object.keys(userConfig.tableLayout.center.users).length;
-        for(var j = 1; j <= noOfUsers; j++) {
-            let u = "user" + j;
-            cell = row.insertCell();
-            cell.innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? round2Fixed(trans[i].ile).toLocaleString("pl") + " zł" : "";
-            cell.className = "centerName" + j + "Class";
-        }
-    }
-}
-
-function updateLeftTable() {
-
-    //insert left user name
-    var leftUser = document.getElementById("leftUser");
-    leftUser.innerHTML=chosenLeftTable;
-
-    var x = document.getElementById("leftTab");
-    //clear table
-    for(i = x.rows.length - 1 ; i >= 1 ; i--)
-    {
-        x.deleteRow(i);
-    }
-
-    for (var i = 0; i < trans.length; i++) {
-
-        if(trans[i].active.isActive == 0) {
-            continue;
-        }
-        //choose only user transactions
-        if(trans[i].komu != chosenLeftTable){
-            continue;
-        }
-        //insert row
-        var row = x.insertRow();
-        row.id = "leftTable";
-        var cell;
-
-        //insert trash cell
-        cell = row.insertCell();
-        var img = document.createElement('img');
-        img.src = "trash.png";
-        img.width="20";
-        img.height="20";
-        cell.appendChild(img);
-        cell.setAttribute("id",transKey[i]);
-        cell.setAttribute("onclick","deleteTransaction(this)");
-        cell.setAttribute("class","leftTrashClass");
-
-        //insert date cell
-        cell = row.insertCell();
-        cell.innerHTML = trans[i].kiedy;
-        cell.className = "leftDateClass";
-        //insert thing cell
-        cell = row.insertCell().innerHTML = trans[i].co;
-        //insert amount cell
-        cell = row.insertCell();
-        cell.innerHTML = round2Fixed(trans[i].ile).toLocaleString("pl") + " zł";
-        cell.className = "leftName1Class";
-        //insert payer cell
-        cell = row.insertCell();
-        cell.innerHTML = trans[i].kto.charAt(0);
-        cell.className = "leftName2Class";
-    }
-}
-
-function updateRightTable() {
-    var x = document.getElementById("rightTab");
-    //clear table
-    for(i = x.rows.length - 1 ; i >= 1 ; i--)
-    {
-        if(x.rows[i].id == 'rightTable') {
-            x.deleteRow(i);
-        }
-    }
-
-    for (var i = 0; i < trans.length; i++) {
-
-        if(trans[i].active.isActive == 0) {
-            continue;
-        }
-
-        let c = userConfig.tableLayout.center.client;
-        if(trans[i].komu == c){
-            continue;
-        }
-        var isValid = true;
-        let noOfClients = Object.keys(userConfig.tableLayout.left.users).length;
-        for(var j = 1; j <= noOfClients; j++) {
-            let u = "user" + j;
-            if(userConfig.tableLayout.left.users[u] == trans[i].komu) {
-                isValid = false;
-            }
-        }
-        if(isValid == false) {
-            continue;
-        }
-
-        //insert row
-        var row = x.insertRow();
-        row.id = "rightTable";
-        var cell;
-
-        //insert trash cell
-        cell = row.insertCell();
-        var img = document.createElement('img');
-        img.src = "trash.png";
-        img.width="20";
-        img.height="20";
-        cell.appendChild(img);
-        cell.setAttribute("id",transKey[i]);
-        cell.setAttribute("onclick","deleteTransaction(this)");
-
-        //insert date cell
-        cell = row.insertCell().innerHTML = trans[i].kiedy;
-        //insert thing cell
-        cell = row.insertCell();
-
-        var img = document.createElement('img');
-        img.src = "images/editButton.png";
-        img.width="10";
-        img.height="10";
-        img.setAttribute("class","editButton");
-        cell.appendChild(img);
-        cell.setAttribute("id",transKey[i]);
-
-        cell.innerHTML += trans[i].co;
-
-
-
-        cell.setAttribute("onclick","ttt(this)");
-        //insert buyer cell
-        cell = row.insertCell().innerHTML = trans[i].komu;
-        //insert amount cell
-        cell = row.insertCell();
-        cell.innerHTML = trans[i].ile;
-        cell.setAttribute("onclick","ttt(this);");
-        cell.setAttribute("onblur", "ttt2(this);");
-        //cell.setAttribute("contenteditable", "true");
-        //insert kto cell
-        cell = row.insertCell().innerHTML = trans[i].kto.charAt(0);
-        // let noOfUsers = Object.keys(userConfig.tableLayout.right.users).length;
-        // for(var j = 1; j <= noOfUsers; j++) {
-        //     let u = "user" + j;
-        //     cell = row.insertCell().innerHTML = trans[i].kto == userConfig.tableLayout.center.users[u] ? trans[i].ile : "";
-        // }
-    }
-}
-
-function ttt(cell) {
-    var row = cell.parentElement;
-
-    for(var  i = row.cells.length-1; i > 0; i--) {
-        row.cells[i].setAttribute("contenteditable", "true");
-    }
-    row.cells[0].firstElementChild.src = "images/editButton.png";
-    row.cells[0].setAttribute("onclick","uuu(this)");
-
-    //cell.setAttribute("contenteditable", "true");
-}
-
-function uuu(cell) {
-    console.log("uuu");
-    var row = cell.parentElement;
-
-    for(var  i = row.cells.length-1; i > 0; i--) {
-        row.cells[i].setAttribute("contenteditable", "false");
-    }
-    row.cells[0].firstElementChild.src = "trash.png";
-    row.cells[0].setAttribute("onclick","deleteTransaction(this)");
-}
-
-function ttt2(cell) {
-    var row = cell.parentElement;
-
-    for(var  i = row.cells.length-1; i > 0; i--) {
-        row.cells[i].setAttribute("contenteditable", "false");
-    }
 }
 
 function updateSummaryTable() {
@@ -405,7 +165,7 @@ function sendForm() {
 
 function test11(number) {
     // Number of inputs to create
-//    var number = document.getElementById("member").value;
+    //    var number = document.getElementById("member").value;
     // Container <div> where dynamic content will be placed
 
     var form = document.getElementById("myForm");
@@ -453,7 +213,7 @@ function test11(number) {
 
 function test11minus() {
     // Number of inputs to create
-//    var number = document.getElementById("member").value;
+    //    var number = document.getElementById("member").value;
     // Container <div> where dynamic content will be placed
 
     var form = document.getElementById("myForm");
@@ -584,17 +344,17 @@ function checkbox(box) {
 
     <div id="successAlert" class="successModal">
 
-      <div class="successModal-content">
-        <p>Dodano</p>
-      </div>
+        <div class="successModal-content">
+            <p>Dodano</p>
+        </div>
 
     </div>
 
     <div id="failureAlert" class="failureModal">
 
-      <div class="failureModal-content">
-        <p>Usunięto</p>
-      </div>
+        <div class="failureModal-content">
+            <p>Usunięto</p>
+        </div>
 
     </div>
 
