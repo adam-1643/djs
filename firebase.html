@@ -250,6 +250,41 @@ function checkbox(box) {
         form.a1.disabled = false;
     }
 }
+
+
+function sortTable(image) {
+    console.log("Sorted!");
+
+    // get whole table
+    var x = image.parentElement.parentElement.parentElement;
+    // get number of rows;
+    var length = x.rows.length-1;
+
+    var cellNumber = image.parentElement.cellIndex;
+
+    var changed = true;
+
+    while(changed) {
+        changed = false;
+        for(var i = 1; i < length; i++) {
+            var textBelow = x.rows[i+1].cells[cellNumber].innerHTML;
+            let textAbove = x.rows[i].cells[cellNumber].innerHTML;
+            if(cellNumber == 4) {
+                textBelow = Number(textBelow);
+                textAbove = Number(textAbove);
+            } else {
+                textBelow = textBelow.toLowerCase();
+                textAbove = textAbove.toLowerCase();
+            }
+
+            if(textBelow < textAbove) {
+                let row = x.rows[i+1];
+                row.parentNode.insertBefore(row, x.rows[i]);
+                changed = true;
+            }
+        }
+    }
+}
 </script>
 
 
@@ -327,11 +362,11 @@ function checkbox(box) {
             <!--Right table-->
             <table id="rightTab" class="table-fill">
                 <th class="text-left"></th>
-                <th class="text-left"><b>Data</b></th>
-                <th><b>Co</b></th>
-                <th><b>Ad</b></th>
-                <th><b>Kim</b></th>
-                <th><b>P</b></th>
+                <th><b>Data</b><img src="images/sortButton.png" width=15px height=15px onclick="sortTable(this)" /></th>
+                <th><b>Co</b><img src="images/sortButton.png" width=15px height=15px onclick="sortTable(this)" /></th>
+                <th><b>Komu</b><img src="images/sortButton.png" width=15px height=15px onclick="sortTable(this)" /></th>
+                <th><b>Ile</b><img src="images/sortButton.png" width=15px height=15px onclick="sortTable(this)" /></th>
+                <th><b>Kto</b><img src="images/sortButton.png" width=15px height=15px onclick="sortTable(this)" /></th>
             </table>
         </div>
 

@@ -1,4 +1,6 @@
 function updateCenterTable() {
+
+    // get whole table
     var x = document.getElementById("tab");
 
     for(i = x.rows.length - 1 ; i >= 0 ; i--)
