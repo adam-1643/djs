@@ -3,6 +3,7 @@ function updateCenterTable() {
     // get whole table
     var x = document.getElementById("tab");
 
+    // clear table with "centerTable" id before refresh
     for(i = x.rows.length - 1 ; i >= 0 ; i--)
     {
         if(x.rows[i].id == 'centerTable') {
@@ -10,27 +11,29 @@ function updateCenterTable() {
         }
     }
 
+    // loop for filling the table
     for (var i = 0; i < trans.length; i++) {
 
+        //skip if transaction is not active
         if(trans[i].active.isActive == 0) {
             continue;
         }
 
+        // skip if client is wrong
         let c = userConfig.tableLayout.center.client;
         if(trans[i].komu != c){
             continue;
         }
 
+        //insert row
         var row = x.insertRow();
         row.id = "centerTable";
+
         var cell;
 
+        //insert trash cell
         cell = row.insertCell();
-        var img = document.createElement('img');
-        img.src = "trash.png";
-        img.width="20";
-        img.height="20";
-        cell.appendChild(img);
+        cell.appendChild(insertTrashImage());
         cell.setAttribute("id",transKey[i]);
         cell.setAttribute("onclick","deleteTransaction(this)");
         cell.setAttribute("class","centerTrashClass");
@@ -78,11 +81,7 @@ function updateLeftTable() {
 
         //insert trash cell
         cell = row.insertCell();
-        var img = document.createElement('img');
-        img.src = "trash.png";
-        img.width="20";
-        img.height="20";
-        cell.appendChild(img);
+        cell.appendChild(insertTrashImage());
         cell.setAttribute("id",transKey[i]);
         cell.setAttribute("onclick","deleteTransaction(this)");
         cell.setAttribute("class","leftTrashClass");
@@ -143,11 +142,7 @@ function updateRightTable() {
 
         //insert trash cell
         cell = row.insertCell();
-        var img = document.createElement('img');
-        img.src = "trash.png";
-        img.width="20";
-        img.height="20";
-        cell.appendChild(img);
+        cell.appendChild(insertTrashImage());
         cell.setAttribute("id",transKey[i]);
         cell.setAttribute("onclick","deleteTransaction(this)");
 
@@ -197,7 +192,6 @@ function ttt(cell) {
     row.cells[0].firstElementChild.src = "images/acceptButton.png";
     row.cells[0].setAttribute("onclick","updateEditedData(this)");
 
-    //cell.setAttribute("contenteditable", "true");
 }
 
 function updateEditedData(cell) {
@@ -216,4 +210,13 @@ function updateEditedData(cell) {
     console.log(row.cells[4].innerHTML);              //ile
     console.log(row.cells[1].innerHTML);              //kiedy
     console.log(currentUser);
+}
+
+
+function insertTrashImage() {
+    var image = document.createElement('img');
+    image.src = "images/trash.png";
+    image.width="20";
+    image.height="20";
+    return image;
 }
