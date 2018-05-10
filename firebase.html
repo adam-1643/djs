@@ -31,7 +31,7 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
         //display notification after added transaction
         var modal = document.getElementById('successAlert');
         modal.style.display = "block";
-        $(".successModal").fadeOut(3000);
+        $(".successModal").fadeOut(2000);
     });
 }
 
@@ -49,12 +49,16 @@ loadUser();
 loadData();
 
 function showVersion() {
+
     //show current version
     var foot = document.getElementById("footerVersion");
     foot.innerHTML = "Version: " + version;
     foot.appendChild(document.createElement("br"));
 
     foot.innerHTML += versionDate;
+    foot.appendChild(document.createElement("br"));
+    let d = new Date();
+    foot.innerHTML += "<b>DJS &copy; 2016-" + d.getFullYear() + "</b>";
 }
 
 function updateData() {
