@@ -86,6 +86,7 @@ function setTable(sm) {
         var cell = x.rows[0].cells[i];
         cell.setAttribute("class","hoverCell");
     }
+    console.log(sm.innerHTML);
     chosenLeftTable = sm.innerHTML;
     sm.setAttribute("class","hover2Cell");
     updateLeftTable();
@@ -102,6 +103,7 @@ function loadData() {
         snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
             transKey.push(childSnapshot.key);
+            console.log(childSnapshot.key);
             trans.push(childData);
         });
         updateData();
@@ -152,6 +154,8 @@ function loadUser() {
 }
 
 function deleteTransaction(id) {
+
+console.log(id.id);
 
     var leadsRef = database.ref('transactions/' + month + "/" + id.id + "/active").set({
     "isActive": 0

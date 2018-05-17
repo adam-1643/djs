@@ -29,6 +29,7 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
         kiedy: kiedy1
     }).then(function(key) {
         //display notification after added transaction
+        console.log(key.key);
         //console.log(key);
         var modal = document.getElementById('successAlert');
         modal.style.display = "block";
@@ -41,6 +42,7 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
 function addLogsEntry(type, content) {
 
     dated = Date().toString();
+    console.log(dated);
     firebase.database().ref('logs/' + month).push({
         type: type,
         content: content,
@@ -138,6 +140,7 @@ function sendForm() {
 
     if(noOfLines == 0) {
         let v2 = form.komu.value;
+        console.log("czy forma? " + form.zwrot.checked);
         let v3 = form.zwrot.checked == true ? "(Z) " + form.co.value : form.co.value;
         let v4 = form.ile.value;
         v4 = v4.replace(",",".");
@@ -150,6 +153,7 @@ function sendForm() {
     } else {
         var sumOfTrans = 0;
         for(var i = 1; i <= noOfLines; i++) {
+            console.log(form["ile"+i].value);
             let g2 = form["komu"+i].value;
             let g3 = form.zwrot.checked == true ? "(Z) " + form["co"+i].value : form["co"+i].value;
             let g4 = form["ile"+i].value;
@@ -269,6 +273,7 @@ function checkbox(box) {
 
 
 function sortTable(image) {
+    console.log("Sorted!");
 
     // get whole table
     var x = image.parentElement.parentElement.parentElement;
