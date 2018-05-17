@@ -34,6 +34,9 @@ function calculate() {
 function calcStatistics() {
 
     var nav = document.getElementById("summaryNav");
+    if(nav.children[0]) {
+        nav.children[0].remove();
+    }
     for(user of users) {
         if(user.nick != currentUser) {
             continue;

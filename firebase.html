@@ -27,11 +27,27 @@ function addNewTransaction(kto1, komu1, co1, ile1, kiedy1, user1) {
         ile: ile1,
         user: user1,
         kiedy: kiedy1
-    }).then(function() {
+    }).then(function(key) {
         //display notification after added transaction
+        console.log(key.key);
+        //console.log(key);
         var modal = document.getElementById('successAlert');
         modal.style.display = "block";
         $(".successModal").fadeOut(2000);
+        addLogsEntry("addedElement", key.key);
+
+    });
+}
+
+function addLogsEntry(type, content) {
+
+    dated = Date().toString();
+    console.log(dated);
+    firebase.database().ref('logs/' + month).push({
+        type: type,
+        content: content,
+        date: dated,
+        user: currentUser
     });
 }
 
