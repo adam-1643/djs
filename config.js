@@ -1,11 +1,11 @@
-var version="0.3.0";
-var versionDate="28-04-2018";
+var version="0.4.0";
+var versionDate="18-05-2018";
 
 var trans = [];
 var transKey = [];
 var users = [];
 var clients = [];
-var month = 'testBase2';
+var month = 'may';
 var userConfig;
 var currentUser = "Kima";
 var userDataLoaded = false;

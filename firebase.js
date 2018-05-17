@@ -1,11 +1,11 @@
 
 var config = {
-    apiKey: "AIzaSyCe2omptPIVRq3mfjkRMHbf_Dcm6VkYG0c",
-    authDomain: "baza-djs.firebaseapp.com",
-    databaseURL: "https://baza-djs.firebaseio.com",
-    projectId: "baza-djs",
-    storageBucket: "baza-djs.appspot.com",
-    messagingSenderId: "417060931400"
+    apiKey: "AIzaSyCtJyHedtC6nP2elDYc1K_MZoOURPYcw2o",
+    authDomain: "djs-productiondatabase.firebaseapp.com",
+    databaseURL: "https://djs-productiondatabase.firebaseio.com",
+    projectId: "djs-productiondatabase",
+    storageBucket: "",
+    messagingSenderId: "578486418210"
 };
 
 firebase.initializeApp(config);
